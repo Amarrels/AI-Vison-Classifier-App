@@ -8,16 +8,33 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+    @StateObject = private var vm = CameraViewModel()
+        
+        GeometryReader {geo in
+            
+            ZStack {
+                Color.black.ignoresSafeArea()
+                ForEach (vm.detections) { det in
+                    let box = pixelRect(from: det.normalizedBounds, in: geo.size)
+                    Rectangle()
+                        .stroke(.red, lineWidth: 2)
+                        .frame(width: box.width, height: box.height)
+                        .position(x: box.midX, y: box.midY)
+                    Text("\(det.label)\(Int(det.score * 100))%")
+                        .font(.caption).bold().
+                }
+            }
+            
         }
-        .padding()
+        
     }
+        
+       
 }
+
 
 #Preview {
     ContentView()
