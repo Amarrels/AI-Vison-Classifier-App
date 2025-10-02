@@ -11,12 +11,13 @@ struct ContentView: View {
     
     
     var body: some View {
-    @StateObject = private var vm = CameraViewModel()
+        
+        @StateObject var vm = CameraViewModel()
         
         GeometryReader {geo in
             
             ZStack {
-                Color.black.ignoresSafeArea()
+                Color.green.ignoresSafeArea()
                 ForEach (vm.detections) { det in
                     let box = pixelRect(from: det.normalizedBounds, in: geo.size)
                     Rectangle()
@@ -24,15 +25,28 @@ struct ContentView: View {
                         .frame(width: box.width, height: box.height)
                         .position(x: box.midX, y: box.midY)
                     Text("\(det.label)\(Int(det.score * 100))%")
-                        .font(.caption).bold().
+                        .font(.caption).bold().foregroundColor(.white)
+                        .padding(.horizontal,6).padding(.vertical,2)
+                        .background(Color.black.opacity(0.7))
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                        .position(x: box.midX, y: box.minY - 30)
                 }
             }
             
         }
         
-    }
         
-       
+    }
+    private func pixelRect(from norm: CGRect, in size: CGSize) -> CGRect {
+        CGRect(
+            x: norm.origin.x * size.width,
+            y: norm.origin.y * size.height,
+            width: norm.width * size.width,
+            height: norm.height * size.height
+            
+        )
+    }
+
 }
 
 
